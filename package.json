@@ -1,0 +1,31 @@
+{
+  "name": "oficina-fases",
+  "version": "1.0.0",
+  "description": "Trabalho acadêmico de desenvolvimento das funcionalidades com persistência da nossa aplicação Web",
+  "main": "main.js",
+  "scripts": {
+    "test": "jest",
+    "start": "main.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vitormlps/oficina-fases.git"
+  },
+  "keywords": [
+    "oficina",
+    "veiculos",
+    "fases",
+    "crud",
+    "servicos"
+  ],
+  "author": "Vitor de Mesquita Lopes",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/vitormlps/oficina-fases/issues"
+  },
+  "homepage": "https://github.com/vitormlps/oficina-fases#readme",
+  "dependencies": {
+    "jest": "^29.2.2",
+    "pg": "^8.8.0"
+  }
+}
