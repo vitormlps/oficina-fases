@@ -1,29 +1,53 @@
-const registro = require('./servicos/registro');
-const etapas = require('./servicos/etapas');
+const servico_registrarOS = require('./servicos/registro');
+const servico_etapas = require('./servicos/etapas');
+const qAPI = require('./persistencia/queryAPI');
 
-function main() {
+async function main() {
     console.log("Bem vindx ao registrador automático da Oficina Fases!")
 
-    const OS = registro.registrarOS()
+    let OS = {}
 
-    if (etapas.fazerVistoria(OS)) {
-        console.log("Obrigado por utilizar o registrador. Até mais!")
-        return
+    try {
+        // await qAPI.queryBegin()
+        OS = await servico_registrarOS()
+        // await qAPI.queryCommit()
+    } catch (err) {
+        // await qAPI.queryRollback()
+        console.log(err);
     }
 
-    etapas.desmontar(OS)
-
-    if (OS.trocarPecas) {
-        etapas.ordemCompra()
-        etapas.funilaria(OS)
+    try {
+        if (await servico_etapas.fazerVistoria(OS)) {
+            console.log("Obrigado por utilizar o registrador. Até mais!")
+            return
+        }
+    } catch (err) {
+        console.log(err);
     }
 
-    etapas.preparar(OS)
-    etapas.pintar(OS)
-    etapas.montar(OS)
-    etapas.acabar(OS)
+    try {
+        await servico_etapas.desmontar(OS)
+    } catch (err) {
+        console.log(err);
+    }
 
-    etapas.fazerVistoria(OS)
+    try {
+        if (OS.trocarPecas) {
+            servico_etapas.ordemCompra()
+            await servico_etapas.funilaria(OS)
+        }
+    } catch (err) {
+        console.log(err);
+    }
+
+    try {
+        await servico_etapas.montar(OS)
+        await servico_etapas.acabar(OS)
+        await servico_etapas.fazerVistoria(OS)
+    } catch (err) {
+        console.log(err);
+    }
+
     console.log("Obrigado por utilizar o registrador. Até mais!")
 }
 

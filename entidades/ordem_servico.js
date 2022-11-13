@@ -1,53 +1,33 @@
-const Random = require('../persistencia/input_mock');
-const Cliente = require('./cliente');
-
 class OrdemServico {
     _id = 0
-    _dataEntrada = new Date()
+    _dataEntrada = ''
     _descricao = ''
     _cliente = null
-    _veiculo = null
     _quantidadeDanos = 0
     _trocarPecas = false
     _fotos = ['']
     _etapas = {
-        'Vistoria': false,
-        'Desmontagem': false,
-        'Funilaria': false,
-        'Preparacao': false,
-        'Pintura': false,
-        'Montagem': false,
-        'Acabamento': false,
+        'vistoria': false,
+        'desmontagem': false,
+        'funilaria': false,
+        'montagem': false,
+        'acabamento': false,
     }
 
-    constructor() {
-        this.setDataEntradaToNow()
-        console.log('Data de Entrada:', this.dataEntrada)
-        this.descricao = Random.os_Descricao()
-        console.log("Descricao do sinistro:", this.descricao)
-        this.cliente = new Cliente()
-        this.veiculo = this.cliente.veiculo
-        this.quantidadeDanos = Random.os_QtdeDanos()
-        console.log("Quantidade de danos:", this.quantidadeDanos)
-        this.setTrocarPecas(Random.os_TrocarPecas())
-        console.log("Trocar peças?", this.trocarPecas ? 'Sim' : 'Não')
-        this.fotos = Random.os_Fotos()
-        console.log("Fotos:", this.fotos)
-        console.log("\n>> Registro da OS realizado!")
-    }
+    constructor() { }
 
     get id() {
         return this._id
     }
+    set id(novoId) {
+        this._id = novoId
+    }
 
     get dataEntrada() {
-        return this._dataEntrada.getDate()
+        return this._dataEntrada
     }
     set dataEntrada(novaDataEntrada) {
-        this._dataEntrada.setDate(novaDataEntrada)
-    }
-    setDataEntradaToNow() {
-        this._dataEntrada.setDate(Date.now())
+        this._dataEntrada = novaDataEntrada
     }
 
     get descricao() {
@@ -55,13 +35,6 @@ class OrdemServico {
     }
     set descricao(novaDescricao) {
         this._descricao = novaDescricao
-    }
-
-    get veiculo() {
-        return this._veiculo
-    }
-    set veiculo(novoVeiculo) {
-        this._veiculo = novoVeiculo
     }
 
     get quantidadeDanos() {

@@ -15,14 +15,44 @@ const connect = require('./conexao');
 //         });
 // }
 
-async function query(text) {
+async function queryBegin() {
+    const Pool = connect()
+    await Pool.query('BEGIN')
+    console.log('BEGIN')
+    await Pool.end()
+}
+async function queryCommit() {
+    const Pool = connect()
+    await Pool.query('COMMIT')
+    console.log('COMMIT')
+    await Pool.end()
+}
+async function queryRollback() {
+    const Pool = connect()
+    await Pool.query('ROLLBACK')
+    console.log('ROLLBACK')
+    await Pool.end()
+}
+
+async function querySingle(text) {
     console.log(text)
 
-    const Pool = await connect()
+    const Pool = connect()
+    const result = await Pool.query(text)
+
+    await Pool.end()
+
+    return await result.rows[0]
+}
+
+async function queryAll(text) {
+    console.log(text)
+
+    const Pool = connect()
     const result = await Pool.query(text)
 
     await Pool.end()
     return await result.rows
 }
 
-module.exports = query
+module.exports = { queryBegin, queryCommit, queryRollback, querySingle, queryAll }

@@ -76,6 +76,11 @@ function v_Cor() {
 }
 
 
+datas = [
+    '2022-11-13', '2020-01-30', '2021-07-06', '2023-04-01', '2019-12-18',
+    '2022-03-03', '2023-05-26', '2021-02-28', '2022-10-05', '2022-06-22',
+]
+
 descricoes = [
     'Colisão', 'Amasso', 'Causa naturais', 'Risco', 'Acidente fatal',
 ]
@@ -86,6 +91,9 @@ trocarPecas = [true, false]
 fotos = [
     '/oficina-fases/fotos/sinistro_01.jpg', '/oficina-fases/fotos/sinistro_02.jpg', '/oficina-fases/fotos/sinistro_03.jpg', '/oficina-fases/fotos/sinistro_04.jpg', '/oficina-fases/fotos/sinistro_05.jpg',
 ]
+function os_DataEntrada() {
+    return _.sample(datas)
+}
 function os_Descricao() {
     return _.sample(descricoes)
 }
@@ -102,5 +110,5 @@ function os_Fotos() {
 module.exports = {
     c_Nome, c_Contato, c_Endereco, c_Cpf,
     v_Tipo, v_Marca, v_Modelo, v_Placa, v_Quilometragem, v_Cor,
-    os_Descricao, os_QtdeDanos, os_TrocarPecas, os_Fotos,
+    os_Descricao, os_QtdeDanos, os_TrocarPecas, os_Fotos, os_DataEntrada,
 }
