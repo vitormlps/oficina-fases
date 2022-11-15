@@ -1,40 +1,48 @@
 const qAPI = require('./queryAPI');
 
-async function registrar_cliente(cliente) {
-    return await qAPI.querySingle(`INSERT INTO cliente(nome, contato, endereco, cpf, id_veiculo) 
+async function registrar(cliente) {
+    resRows = await qAPI.query(`INSERT INTO cliente(nome, contato, endereco, cpf, id_veiculo) 
                     VALUES ('${cliente.nome}',
                             '${cliente.contato}',
                             '${cliente.endereco}',
                             '${cliente.cpf}',
                             '${cliente.veiculo.id}')
                     RETURNING id_cliente;`)
+    cliente.id = resRows[0].id_cliente
+    return cliente
 }
 
-async function listar_clientes() {
-    return await qAPI.queryAll(`SELECT * FROM cliente;`)
+async function listar() {
+    resRows = await qAPI.query(`SELECT * FROM cliente;`)
+    return resRows
 }
 
-async function buscar_cliente(cliente) {
-    return await qAPI.querySingle(`SELECT * FROM cliente WHERE id_cliente = ${cliente.id};`)
+async function buscar(cliente_id) {
+    resRows = await qAPI.query(`SELECT * FROM cliente WHERE id_cliente = ${cliente_id};`)
+    return resRows[0]
 }
 
-async function buscar_campo_cliente(cliente, campo) {
-    return await qAPI.querySingle(`SELECT '${campo}' FROM ordem_servico WHERE id_cliente = ${cliente.id};`)
+async function buscar_campo(cliente_id, campo) {
+    resRows = await qAPI.query(`SELECT ${campo} FROM ordem_servico WHERE id_cliente = ${cliente_id};`)
+    return resRows[0][campo]
 }
 
-async function atualizar_cliente(cliente, campo, data) {
-    return await qAPI.querySingle(`UPDATE cliente SET '${campo}' = '${data}'
+async function atualizar(cliente, campo, data) {
+    resRows = await qAPI.query(`UPDATE cliente SET ${campo} = ${data}
                         WHERE id_cliente = ${cliente.id}
-                        RETURNING '${campo}';`)
+                        RETURNING ${campo};`)
+    cliente[campo] = resRows[0][campo]
+    return resRows[0][campo]
 }
 
-async function remover_cliente(cliente) {
-    return await qAPI.querySingle(`DELETE FROM cliente
-                        WHERE id_cliente = ${cliente.id}
+async function remover(cliente_id) {
+    resRows = await qAPI.query(`DELETE FROM cliente
+                        WHERE id_cliente = ${cliente_id}
                         RETURNING id_cliente;`)
+    return resRows[0].id_cliente
 }
 
 module.exports = {
-    registrar_cliente, listar_clientes, atualizar_cliente,
-    buscar_cliente, buscar_campo_cliente, remover_cliente,
+    registrar, listar, atualizar,
+    buscar, buscar_campo, remover,
 }

@@ -82,12 +82,12 @@ datas = [
 ]
 
 descricoes = [
-    'Colisão', 'Amasso', 'Causa naturais', 'Risco', 'Acidente fatal',
+    'Colisão', 'Amasso', 'Causas naturais', 'Risco', 'Acidente fatal',
 ]
 qtdeDanos = [
-    1, 2, 3, 4, 5,
+    1, 2, 3, 4, 5, 1, 2, 3, 4, 5,
 ]
-trocarPecas = [true, false]
+trocarPecas = [15, 40, 54, 71, 86, 35, 41, 1, 68, 97]
 fotos = [
     '/oficina-fases/fotos/sinistro_01.jpg', '/oficina-fases/fotos/sinistro_02.jpg', '/oficina-fases/fotos/sinistro_03.jpg', '/oficina-fases/fotos/sinistro_04.jpg', '/oficina-fases/fotos/sinistro_05.jpg',
 ]
@@ -101,7 +101,12 @@ function os_QtdeDanos() {
     return _.sample(qtdeDanos)
 }
 function os_TrocarPecas() {
-    return _.sample(trocarPecas)
+    let sample = _.sample(trocarPecas)
+    console.log(sample)
+    if (sample >= 50) {
+        return true
+    }
+    return false
 }
 function os_Fotos() {
     return _.sample(fotos)

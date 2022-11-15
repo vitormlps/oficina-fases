@@ -37,6 +37,13 @@ class OrdemServico {
         this._descricao = novaDescricao
     }
 
+    get cliente() {
+        return this._cliente
+    }
+    set cliente(novoCliente) {
+        this._cliente = novoCliente
+    }
+
     get quantidadeDanos() {
         return this._quantidadeDanos
     }
@@ -47,8 +54,8 @@ class OrdemServico {
     get trocarPecas() {
         return this._trocarPecas
     }
-    setTrocarPecas() {
-        this._trocarPecas = !this.trocarPecas
+    set trocarPecas(novoTrocarPecas) {
+        this._trocarPecas = novoTrocarPecas
     }
 
     get fotos() {

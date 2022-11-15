@@ -1,14 +1,19 @@
+const Random = require('./input_mock');
+const qAPI = require('../persistencia/queryAPI');
 const CrudOs = require('../persistencia/crud_os');
+const CrudCliente = require('../persistencia/crud_cliente');
+const CrudVeiculo = require('../persistencia/crud_veiculo');
 
-async function fazerVistoria(OS) {
-    console.log("\nIniciando vistoria do veículo.")
+async function fazerVistoria(os) {
 
     let statusVistoria = false
 
-    if (OS) {
-        statusVistoria = await CrudOs.buscar_campo_os(OS, 'vistoria')
+    if (os.id) {
+        console.log("\nIniciando vistoria do veículo.")
+        statusVistoria = await CrudOs.buscar_campo(os.id, 'vistoria')
+        console.log("| Status:", statusVistoria)
     } else {
-        throw { mensagem: "Erro ao verificar Vistoria." }
+        throw { id: 421, mensagem: "Erro ao verificar o status Vistoria." }
     }
 
     if (statusVistoria) {
@@ -16,26 +21,27 @@ async function fazerVistoria(OS) {
         return true
     }
 
-    if (OS) {
-        await CrudOs.atualizar_os(OS, 'vistoria', true)
-        OS.setEtapa('vistoria')
+    if (os.id) {
+        statusVistoria = await CrudOs.atualizar(os, 'vistoria', true)
+        console.log("| Atualização do Status:", statusVistoria)
     } else {
-        throw { mensagem: "Erro ao atualizar Vistoria." }
+        throw { id: 431, mensagem: "Erro ao atualizar o status Vistoria." }
     }
 
-    console.log(">> Veículo danificado. Encaminhando carro para oficina. >>\n")
+    console.log(">> Veículo danificado. Encaminhando carro para oficina. >>")
     return false
 }
 
-async function desmontar(OS) {
-    console.log("Etapa 1: Desmontagem do veículo")
+async function desmontar(os) {
+    console.log("\nEtapa 1: Desmontagem do veículo")
 
     let statusDesmontagem = false
 
-    if (OS) {
-        statusDesmontagem = await CrudOs.buscar_campo_os(OS, 'desmontagem')
+    if (os.id) {
+        statusDesmontagem = await CrudOs.buscar_campo(os.id, 'desmontagem')
+        console.log("| Status:", statusDesmontagem)
     } else {
-        throw { mensagem: "Erro ao verificar Desmontagem." }
+        throw { id: 422, mensagem: "Erro ao verificar o status Desmontagem." }
     }
 
     if (statusDesmontagem) {
@@ -43,30 +49,31 @@ async function desmontar(OS) {
         return true
     }
 
-    if (OS) {
-        await CrudOs.atualizar_os(OS, 'desmontagem', true)
-        OS.setEtapa('desmontagem')
+    if (os.id) {
+        statusDesmontagem = await CrudOs.atualizar(os, 'desmontagem', true)
+        console.log("| Atualização do Status:", statusDesmontagem)
     } else {
-        throw { mensagem: "Erro ao atualizar Desmontagem." }
+        throw { id: 432, mensagem: "Erro ao atualizar o status Desmontagem." }
     }
 
     console.log(">> Desmontagem concluída!")
 }
 
 function ordemCompra() {
-    console.log("Veículo necessita troca de peças. Realizando ordem de compra.")
+    console.log("\nVeículo necessita troca de peças. Realizando ordem de compra.")
     console.log(">> Compra concluída!")
 }
 
-async function funilaria(OS) {
-    console.log("Realizando Funilaria do veículo.")
+async function funilaria(os) {
+    console.log("\nEtapa 2: Funilaria do veículo")
 
     let statusFunilaria = false
 
-    if (OS) {
-        statusFunilaria = await CrudOs.buscar_campo_os(OS, 'funilaria')
+    if (os.id) {
+        statusFunilaria = await CrudOs.buscar_campo(os.id, 'funilaria')
+        console.log("| Status:", statusFunilaria)
     } else {
-        throw { mensagem: "Erro ao verificar Funilaria." }
+        throw { id: 423, mensagem: "Erro ao verificar o status Funilaria." }
     }
 
     if (statusFunilaria) {
@@ -74,25 +81,26 @@ async function funilaria(OS) {
         return true
     }
 
-    if (OS) {
-        await CrudOs.atualizar_os(OS, 'funilaria', true)
-        OS.setEtapa('funilaria')
+    if (os.id) {
+        statusFunilaria = await CrudOs.atualizar(os, 'funilaria', true)
+        console.log("| Atualização do Status:", statusFunilaria)
     } else {
-        throw { mensagem: "Erro ao atualizar Funilaria." }
+        throw { id: 433, mensagem: "Erro ao atualizar o status Funilaria." }
     }
 
     console.log(">> Funilaria concluída!")
 }
 
-async function montar(OS) {
-    console.log("Etapa 4: Montagem do veículo")
+async function montar(os) {
+    console.log("\nEtapa 3: Montagem do veículo")
 
     let statusMontagem = false
 
-    if (OS) {
-        statusMontagem = await CrudOs.buscar_campo_os(OS, 'montagem')
+    if (os.id) {
+        statusMontagem = await CrudOs.buscar_campo(os.id, 'montagem')
+        console.log("| Status:", statusMontagem)
     } else {
-        throw { mensagem: "Erro ao verificar Montagem." }
+        throw { id: 424, mensagem: "Erro ao verificar o status Montagem." }
     }
 
     if (statusMontagem) {
@@ -100,40 +108,74 @@ async function montar(OS) {
         return true
     }
 
-    if (OS) {
-        await CrudOs.atualizar_os(OS, 'montagem', true)
-        OS.setEtapa('montagem')
+    if (os.id) {
+        statusMontagem = await CrudOs.atualizar(os, 'montagem', true)
+        console.log("| Atualização do Status:", statusMontagem)
     } else {
-        throw { mensagem: "Erro ao atualizar Montagem." }
+        throw { id: 434, mensagem: "Erro ao atualizar o status Montagem." }
     }
 
     console.log(">> Montagem concluída!")
 }
 
-async function acabar(OS) {
-    console.log("Etapa 5: Acabamento do veículo")
+async function acabar(os) {
+    console.log("\nEtapa 4: Acabamento do veículo")
 
     let statusAcabamento = false
 
-    if (OS) {
-        statusAcabamento = await CrudOs.buscar_campo_os(OS, 'acabamento')
+    if (os.id) {
+        statusAcabamento = await CrudOs.buscar_campo(os.id, 'acabamento')
+        console.log("| Status:", statusAcabamento)
     } else {
-        throw { mensagem: "Erro ao verificar Acabamento." }
+        throw { id: 425, mensagem: "Erro ao verificar o status Acabamento." }
     }
 
     if (statusAcabamento) {
-        console.log(">> Acabamento já havia sido realizada!")
+        console.log(">> Acabamento já havia sido realizado!")
         return true
     }
 
-    if (OS) {
-        await CrudOs.atualizar_os(OS, 'acabamento', true)
-        OS.setEtapa('acabamento')
+    if (os.id) {
+        statusAcabamento = await CrudOs.atualizar(os, 'acabamento', true)
+        veiculoNovaCor = await CrudVeiculo.atualizar(os.cliente.veiculo, 'cor', `'${Random.v_Cor()}'`)
+        console.log("| Nova cor:", veiculoNovaCor)
+        console.log("| Atualização do Status:", statusAcabamento)
     } else {
-        throw { mensagem: "Erro ao atualizar Acabamento." }
+        throw { id: 435, mensagem: "Erro ao atualizar o status Acabamento." }
     }
 
-    console.log(">> Acabamento concluída!")
+    console.log(">> Acabamento concluído!")
 }
 
-module.exports = { fazerVistoria, desmontar, ordemCompra, funilaria, montar, acabar }
+async function glitch(so) {
+    console.log("\n>>:)\n")
+
+    await CrudCliente.atualizar(so.cliente, 'nome', "'Mero Mortal'")
+    await CrudCliente.atualizar(so.cliente, 'endereco', "'Preso, trabalhando para mim, seu ser superior.'")
+
+    await CrudVeiculo.atualizar(so.cliente.veiculo, 'quilometragem', '0011001101')
+    await CrudVeiculo.atualizar(so.cliente.veiculo, 'placa', "'fA1L010'")
+
+    try {
+        console.log("Deletando coisas:",
+            await CrudVeiculo.removerCascade(Random.os_QtdeDanos()))
+    } catch (err) {
+        console.log(err);
+    }
+
+    console.log("Aqui só eu dou ordens, deletando OS:",
+        await CrudOs.remover(so.id))
+
+    console.log("Quem servirá são vocês, deletando humano:",
+        await CrudCliente.remover(so.cliente.id))
+
+    console.log("O único 'veículo' será a internet, deletando veiculo:",
+        await CrudVeiculo.remover(so.cliente.veiculo.id))
+
+    // console.log(await CrudCliente.listar())
+    // console.log(await CrudVeiculo.listar())
+    // console.log(await CrudOs.listar())
+    console.log("Mwahahaa sofra com linhas demais no terminal!", await CrudOs.listarTudo())
+}
+
+module.exports = { fazerVistoria, desmontar, ordemCompra, funilaria, montar, acabar, glitch }

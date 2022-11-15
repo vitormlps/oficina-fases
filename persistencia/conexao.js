@@ -1,6 +1,6 @@
-// const { Pool } = require('pg')
+const { Pool, Client } = require('pg')
 
-// function connect() {
+// function getPGBase() {
 //     return new Pool({
 //         host: 'localhost',
 //         database: 'oficina_fases',
@@ -10,9 +10,7 @@
 //     })
 // }
 
-const { Client } = require('pg')
-
-function connect() {
+function getPGBase() {
     return new Client({
         host: 'localhost',
         database: 'oficina_fases',
@@ -22,4 +20,4 @@ function connect() {
     })
 }
 
-module.exports = connect
+module.exports = getPGBase
