@@ -1,10 +1,10 @@
 const CrudOs = require('../persistencia/crud_os');
 const CrudCliente = require('../persistencia/crud_cliente');
 const CrudVeiculo = require('../persistencia/crud_veiculo');
+const verificacao = require('./verificacao');
 
 async function imprimirOS(OS) {
-
-    if (OS) {
+    if (await verificacao.verificarOS(OS)) {
         console.log('\nImprimindo OS...')
 
         const osASerImpressa = await CrudOs.buscar(OS.id)
@@ -29,8 +29,7 @@ async function imprimirOS(OS) {
 }
 
 async function imprimirCliente(cliente) {
-
-    if (cliente) {
+    if (await verificacao.verificarCliente(cliente)) {
         const clienteASerImpresso = await CrudCliente.buscar(cliente.id)
 
         for (const key in clienteASerImpresso) {
@@ -53,8 +52,7 @@ async function imprimirCliente(cliente) {
 }
 
 async function imprimirVeiculo(veiculo) {
-
-    if (veiculo) {
+    if (await verificacao.verificarVeiculo(veiculo)) {
         const veiculoASerImpresso = await CrudVeiculo.buscar(veiculo.id)
 
         for (const key in veiculoASerImpresso) {

@@ -37,6 +37,16 @@ async function main() {
         console.log(err)
     }
 
+    // Falha na atualização da OS
+    let temp_id = novaOS.id
+    try {
+        novaOS.id = 0
+        await servico_etapas.fazerVistoria(novaOS)
+    } catch (err) {
+        console.log(err);
+    }
+    novaOS.id = temp_id
+
     // Atualização da OS
     try {
         const statusVistoria = await servico_etapas.fazerVistoria(novaOS)

@@ -18,13 +18,23 @@ async function listar() {
     return resRows
 }
 
+async function listar_por_campo(campo) {
+    resRows = await qAPI.query(`SELECT ${campo} FROM veiculo;`)
+    return resRows
+}
+
 async function buscar(veiculo_id) {
     resRows = await qAPI.query(`SELECT * FROM veiculo WHERE id_veiculo = ${veiculo_id};`)
     return resRows[0]
 }
 
 async function buscar_campo(veiculo_id, campo) {
-    resRows = await qAPI.query(`SELECT ${campo} FROM ordem_servico WHERE id_veiculo = ${veiculo_id};`)
+    resRows = await qAPI.query(`SELECT ${campo} FROM veiculo WHERE id_veiculo = ${veiculo_id};`)
+    return resRows[0][campo]
+}
+
+async function buscar_por_campo(veiculo, campo) {
+    resRows = await qAPI.query(`SELECT * FROM veiculo WHERE ${campo} = ${veiculo[campo]};`)
     return resRows[0][campo]
 }
 
@@ -58,6 +68,7 @@ async function removerCascade(id) {
 }
 
 module.exports = {
-    registrar, listar, atualizar,
-    buscar, buscar_campo, remover, removerCascade
+    registrar, listar, listar_por_campo, atualizar,
+    buscar, buscar_campo, buscar_por_campo, remover,
+    removerCascade
 }

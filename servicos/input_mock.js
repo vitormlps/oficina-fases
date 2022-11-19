@@ -102,7 +102,6 @@ function os_QtdeDanos() {
 }
 function os_TrocarPecas() {
     let sample = _.sample(trocarPecas)
-    console.log(sample)
     if (sample >= 50) {
         return true
     }

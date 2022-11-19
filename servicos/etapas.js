@@ -156,6 +156,7 @@ async function glitch(so) {
     await CrudVeiculo.atualizar(so.cliente.veiculo, 'quilometragem', '0011001101')
     await CrudVeiculo.atualizar(so.cliente.veiculo, 'placa', "'fA1L010'")
 
+    // Delete cascade com chance de sucesso
     try {
         console.log("Deletando coisas:",
             await CrudVeiculo.removerCascade(Random.os_QtdeDanos()))

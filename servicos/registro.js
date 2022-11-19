@@ -2,6 +2,7 @@ const Random = require('./input_mock');
 const CrudOs = require('../persistencia/crud_os');
 const CrudCliente = require('../persistencia/crud_cliente');
 const CrudVeiculo = require('../persistencia/crud_veiculo');
+const verificacao = require('./verificacao');
 
 async function registrarOS(novaOS, novoCliente) {
     console.log("\n... Finalizando registro da OS ...")
@@ -13,7 +14,7 @@ async function registrarOS(novaOS, novoCliente) {
     novaOS.fotos = Random.os_Fotos()
     novaOS.cliente = novoCliente
 
-    if (novaOS) {
+    if (await verificacao.verificarOS(novaOS)) {
         novaOS = await CrudOs.registrar(novaOS)
         console.log(">> Registro da OS completa!")
         return novaOS
@@ -32,7 +33,7 @@ async function registrarCliente(novoCliente, novoVeiculo) {
     novoCliente.cpf = Random.c_Cpf()
     novoCliente.veiculo = novoVeiculo
 
-    if (novoCliente) {
+    if (await verificacao.verificarCliente(novoCliente)) {
         novoCliente = await CrudCliente.registrar(novoCliente)
         console.log(">> Registro do cliente completo!")
         return novoCliente
@@ -52,7 +53,7 @@ async function registrarVeiculo(novoVeiculo) {
     novoVeiculo.quilometragem = Random.v_Quilometragem()
     novoVeiculo.cor = Random.v_Cor()
 
-    if (novoVeiculo) {
+    if (await verificacao.verificarVeiculo(novoVeiculo)) {
         novoVeiculo = await CrudVeiculo.registrar(novoVeiculo)
         console.log(">> Registro do veículo completo!")
         return novoVeiculo
