@@ -32,11 +32,6 @@ async function buscar_campo(cliente_id, campo) {
     return resRows[0][campo]
 }
 
-async function buscar_por_campo(cliente, campo) {
-    resRows = await qAPI.query(`SELECT * FROM cliente WHERE ${campo} = ${cliente[campo]};`)
-    return resRows[0][campo]
-}
-
 async function atualizar(cliente, campo, data) {
     resRows = await qAPI.query(`UPDATE cliente SET ${campo} = ${data}
                         WHERE id_cliente = ${cliente.id}
@@ -54,5 +49,5 @@ async function remover(cliente_id) {
 
 module.exports = {
     registrar, listar, listar_por_campo, atualizar,
-    buscar, buscar_campo, buscar_por_campo, remover,
+    buscar, buscar_campo, remover,
 }

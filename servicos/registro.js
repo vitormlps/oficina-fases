@@ -7,6 +7,10 @@ const verificacao = require('./verificacao');
 async function registrarOS(novaOS, novoCliente) {
     console.log("\n... Finalizando registro da OS ...")
 
+    if (typeof novaOS != 'object' && typeof novoCliente != 'object') {
+        throw { id: 403, mensagem: "Erro ao registrar OS." }
+    }
+
     novaOS.dataEntrada = Random.os_DataEntrada()
     novaOS.descricao = Random.os_Descricao()
     novaOS.quantidadeDanos = Random.os_QtdeDanos()
@@ -20,12 +24,16 @@ async function registrarOS(novaOS, novoCliente) {
         return novaOS
 
     } else {
-        throw { id: 403, mensagem: "Erro ao registrar OS." }
+        throw { id: 406, mensagem: "OS já registrada." }
     }
 }
 
 async function registrarCliente(novoCliente, novoVeiculo) {
     console.log("\n... Registrando informações do cliente ...")
+
+    if (typeof novoCliente != 'object' && typeof novoVeiculo != 'object') {
+        throw { id: 402, mensagem: "Erro ao registrar o cliente." }
+    }
 
     novoCliente.nome = Random.c_Nome()
     novoCliente.contato = Random.c_Contato()
@@ -39,12 +47,16 @@ async function registrarCliente(novoCliente, novoVeiculo) {
         return novoCliente
 
     } else {
-        throw { id: 402, mensagem: "Erro ao registrar o cliente." }
+        throw { id: 405, mensagem: "Cliente já registrado." }
     }
 }
 
 async function registrarVeiculo(novoVeiculo) {
     console.log("\n... Registrando informações do veículo ...")
+
+    if (typeof novoVeiculo != 'object') {
+        throw { id: 401, mensagem: "Erro ao registrar o veículo." }
+    }
 
     novoVeiculo.setTipo(Random.v_Tipo())
     novoVeiculo.marca = Random.v_Marca()
@@ -59,7 +71,7 @@ async function registrarVeiculo(novoVeiculo) {
         return novoVeiculo
 
     } else {
-        throw { id: 401, mensagem: "Erro ao registrar o veículo." }
+        throw { id: 404, mensagem: "Veículo já registrado." }
     }
 }
 

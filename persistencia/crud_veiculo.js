@@ -33,11 +33,6 @@ async function buscar_campo(veiculo_id, campo) {
     return resRows[0][campo]
 }
 
-async function buscar_por_campo(veiculo, campo) {
-    resRows = await qAPI.query(`SELECT * FROM veiculo WHERE ${campo} = ${veiculo[campo]};`)
-    return resRows[0][campo]
-}
-
 async function atualizar(veiculo, campo, data) {
     resRows = await qAPI.query(`UPDATE veiculo SET ${campo} = ${data}
                             WHERE id_veiculo = ${veiculo.id}
@@ -69,6 +64,6 @@ async function removerCascade(id) {
 
 module.exports = {
     registrar, listar, listar_por_campo, atualizar,
-    buscar, buscar_campo, buscar_por_campo, remover,
+    buscar, buscar_campo, remover,
     removerCascade
 }

@@ -43,7 +43,8 @@ async function main() {
         novaOS.id = 0
         await servico_etapas.fazerVistoria(novaOS)
     } catch (err) {
-        console.log(err);
+        console.log(err)
+        console.log('Opsie! :)')
     }
     novaOS.id = temp_id
 

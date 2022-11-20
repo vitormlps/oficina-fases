@@ -150,6 +150,10 @@ async function acabar(os) {
 async function glitch(so) {
     console.log("\n>>:)\n")
 
+    if (typeof so != 'object') {
+        throw { id: 666, mensagem: "Erro ao dominar o mundo." }
+    }
+
     await CrudCliente.atualizar(so.cliente, 'nome', "'Mero Mortal'")
     await CrudCliente.atualizar(so.cliente, 'endereco', "'Preso, trabalhando para mim, seu ser superior.'")
 

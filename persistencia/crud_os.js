@@ -40,11 +40,6 @@ async function buscar_campo(os_id, campo) {
     return resRows[0][campo]
 }
 
-async function buscar_por_campo(os, campo) {
-    resRows = await qAPI.query(`SELECT * FROM ordem_servico WHERE ${campo} = ${os[campo]};`)
-    return resRows[0][campo]
-}
-
 async function atualizar(os, campo, data) {
     resRows = await qAPI.query(`UPDATE ordem_servico SET ${campo} = ${data}
                         WHERE id_os = ${os.id}
@@ -66,5 +61,5 @@ async function remover(os_id) {
 
 module.exports = {
     registrar, listar, listar_por_campo, listarTudo,
-    atualizar, buscar, buscar_campo, buscar_por_campo, remover,
+    atualizar, buscar, buscar_campo, remover,
 }
