@@ -1,5 +1,5 @@
 class Cliente {
-    _id = 0
+    _id = null
     _nome = ''
     _contato = ''
     _endereco = ''

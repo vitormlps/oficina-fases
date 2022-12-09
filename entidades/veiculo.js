@@ -1,10 +1,6 @@
 class Veiculo {
-    _id = 0
-    _tipos = {
-        'Carro': false,
-        'Moto': false,
-        'Caminhão': false,
-    }
+    _id = null
+    _tipo = ''
     _marca = ''
     _modelo = ''
     _placa = ''
@@ -20,18 +16,11 @@ class Veiculo {
         this._id = novoId
     }
 
-    get tipos() {
-        return this._tipos
+    get tipo() {
+        return this._tipo
     }
-    getTipo() {
-        for (let tipo in this.tipos) {
-            if (this.tipos[tipo]) {
-                return tipo
-            }
-        }
-    }
-    setTipo(tipo) {
-        this.tipos[tipo] = !this.tipos[tipo]
+    set tipo(novoTipo) {
+        this._tipo = novoTipo
     }
 
     get marca() {

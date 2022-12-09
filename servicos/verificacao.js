@@ -2,39 +2,37 @@ const CrudOs = require('../persistencia/crud_os');
 const CrudCliente = require('../persistencia/crud_cliente');
 const CrudVeiculo = require('../persistencia/crud_veiculo');
 
-async function verificarVeiculo(novoVeiculo) {
-    const listaPlacas = await CrudVeiculo.listar_por_campo('placa')
+async function verificarRegistro(entidade) {
 
-    listaPlacas.forEach(data => {
-        if (novoVeiculo.placa == data.placa) {
-            return false
+    if ('_dataEntrada' in entidade) {
+        const listaIdOs = await CrudOs.listar_por_campo('id_os')
+
+        if (!listaIdOs.includes(entidade.id)) {
+            return true
         }
-    });
-    return true
-}
+        return false
+    }
 
-async function verificarCliente(novoCliente) {
-    const listaCpf = await CrudCliente.listar_por_campo('cpf')
+    if ('_cpf' in entidade) {
+        const listaIDCliente = await CrudCliente.listar_por_campo('id_cliente')
 
-    listaCpf.forEach(data => {
-        if (novoCliente.cpf == data.cpf) {
-            return false
+        if (!listaIDCliente.includes(entidade.id)) {
+            return true
         }
-    });
-    return true
-}
+        return false
+    }
 
-async function verificarOS(novaOS) {
-    const listaData = await CrudOs.listar_por_campo('data_entrada')
+    if ('_placa' in entidade) {
+        const listaIDVeiculo = await CrudVeiculo.listar_por_campo('id_veiculo')
 
-    listaData.forEach(data => {
-        if (novaOS.dataEntrada == data.data_entrada) {
-            return false
+        if (!listaIDVeiculo.includes(entidade.id)) {
+            return true
         }
-    });
-    return true
+        return false
+    }
+
+    return false
 }
 
-module.exports = {
-    verificarVeiculo, verificarCliente, verificarOS
-}
+
+module.exports = { verificarRegistro }

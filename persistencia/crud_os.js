@@ -2,15 +2,10 @@ const qAPI = require('./queryAPI');
 
 async function registrar(os) {
     resRows = await qAPI.query(`INSERT INTO ordem_servico(data_entrada, descricao, quantidade_danos, trocar_pecas, fotos, id_cliente) 
-                    VALUES ('${os.dataEntrada}',
-                            '${os.descricao}',
-                            '${os.quantidadeDanos}',
-                            '${os.trocarPecas}',
-                            '${os.fotos}',
-                            '${os.cliente.id}')
-                    RETURNING id_os;`)
-    os.id = resRows[0].id_os
-    return os
+                    VALUES ($1, $2, $3, $4, $5, $6) RETURNING *;`,
+        [os.dataEntrada, os.descricao, os.quantidadeDanos, os.trocarPecas, os.fotos, os.cliente.id_cliente])
+
+    return resRows[0]
 }
 
 async function listar() {
@@ -19,7 +14,7 @@ async function listar() {
 }
 
 async function listar_por_campo(campo) {
-    resRows = await qAPI.query(`SELECT ${campo} FROM ordem_servico;`)
+    resRows = await qAPI.query(`SELECT $1 FROM ordem_servico;`, [campo])
     return resRows
 }
 
@@ -31,35 +26,40 @@ async function listarTudo() {
 }
 
 async function buscar(os_id) {
-    resRows = await qAPI.query(`SELECT * FROM ordem_servico WHERE id_os = ${os_id};`)
+    resRows = await qAPI.query(`SELECT * FROM ordem_servico WHERE id_os = $1;`,
+        [os_id])
+
     return resRows[0]
 }
 
-async function buscar_campo(os_id, campo) {
-    resRows = await qAPI.query(`SELECT ${campo} FROM ordem_servico WHERE id_os = ${os_id};`)
+async function buscarUltimoRegistro() {
+    resRows = await qAPI.query(`SELECT * FROM ordem_servico ORDER BY id_os DESC LIMIT 1;`)
+    return resRows[0]
+}
+
+async function buscar_campo(id, campo) {
+    resRows = await qAPI.query(`SELECT * FROM ordem_servico WHERE id_os = $1;`,
+        [id])
+
     return resRows[0][campo]
 }
 
-async function atualizar(os, campo, data) {
-    resRows = await qAPI.query(`UPDATE ordem_servico SET ${campo} = ${data}
-                        WHERE id_os = ${os.id}
-                        RETURNING ${campo};`)
-    if (campo in os.etapas) {
-        os.setEtapa(campo)
-    } else {
-        os[campo] = resRows[0][campo]
-    }
-    return resRows[0][campo]
+async function atualizar(id, campo, data) {
+    resRows = await qAPI.query(`UPDATE ordem_servico SET ${campo} = $1 WHERE id_os = $2 RETURNING *;`,
+        [data, id])
+
+    return resRows[0]
 }
 
-async function remover(os_id) {
-    resRows = await qAPI.query(`DELETE FROM ordem_servico
-                        WHERE id_os = ${os_id}
-                        RETURNING id_os;`)
-    return resRows[0].id_os
+async function remover(id) {
+    resRows = await qAPI.query(`DELETE FROM ordem_servico WHERE id_os = $1 RETURNING *;`,
+        [id])
+
+    return resRows[0]
 }
 
 module.exports = {
     registrar, listar, listar_por_campo, listarTudo,
-    atualizar, buscar, buscar_campo, remover,
+    atualizar, buscar, buscar_campo, buscarUltimoRegistro,
+    remover,
 }

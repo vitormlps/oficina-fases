@@ -1,68 +1,38 @@
 const CrudOs = require('../persistencia/crud_os');
 const CrudCliente = require('../persistencia/crud_cliente');
 const CrudVeiculo = require('../persistencia/crud_veiculo');
-const verificacao = require('./verificacao');
 
-async function imprimirOS(OS) {
-    if (await verificacao.verificarOS(OS)) {
-        console.log('\nImprimindo OS...')
+async function imprimirTodos(tipo) {
 
-        const osASerImpressa = await CrudOs.buscar(OS.id)
-
-        for (const key in osASerImpressa) {
-            if (key == 'id_os') {
-                continue
-            } else if (key == 'id_cliente') {
-                try {
-                    console.log('\nImprimindo Cliente...')
-                    await imprimirCliente(OS.cliente)
-                } catch (err) {
-                    console.log(err)
-                }
-            } else {
-                console.log(`| ${key} : ${osASerImpressa[key]}`.trim())
-            }
-        }
-    } else {
-        throw { id: 413, mensagem: "Erro ao imprimir OS." }
+    switch (tipo) {
+        case 'os':
+            return await CrudOs.listar()
+        case 'cliente':
+            return await CrudCliente.listar()
+        case 'veiculo':
+            return await CrudVeiculo.listar()
+        default:
+            throw { id: 400, mensagem: "Erro ao imprimir lista." }
     }
 }
 
-async function imprimirCliente(cliente) {
-    if (await verificacao.verificarCliente(cliente)) {
-        const clienteASerImpresso = await CrudCliente.buscar(cliente.id)
+async function imprimirEntidade(tipo, id) {
 
-        for (const key in clienteASerImpresso) {
-            if (key == 'id_cliente') {
-                continue
-            } else if (key == 'id_veiculo') {
-                try {
-                    console.log('\nImprimindo Veiculo...')
-                    await imprimirVeiculo(cliente.veiculo)
-                } catch (err) {
-                    console.log(err)
-                }
-            } else {
-                console.log(`| ${key} : ${clienteASerImpresso[key]}`.trim())
-            }
-        }
+    let entidade = null
+    switch (tipo) {
+        case 'os':
+            entidade = await CrudOs.buscar(id)
+        case 'cliente':
+            entidade = await CrudCliente.buscar(id)
+        case 'veiculo':
+            entidade = await CrudVeiculo.buscar(id)
+    }
+
+    if (entidade) {
+        return entidade
     } else {
-        throw { id: 412, mensagem: "Erro ao imprimir cliente." }
+        throw { id: 404, mensagem: "Entidade não encontrada." }
     }
 }
 
-async function imprimirVeiculo(veiculo) {
-    if (await verificacao.verificarVeiculo(veiculo)) {
-        const veiculoASerImpresso = await CrudVeiculo.buscar(veiculo.id)
-
-        for (const key in veiculoASerImpresso) {
-            if (key != 'id_veiculo') {
-                console.log(`| ${key} : ${veiculoASerImpresso[key]}`.trim())
-            }
-        }
-    } else {
-        throw { id: 411, mensagem: "Erro ao imprimir veiculo." }
-    }
-}
-
-module.exports = { imprimirOS }
+module.exports = { imprimirEntidade, imprimirTodos }

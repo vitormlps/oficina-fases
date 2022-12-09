@@ -1,11 +1,9 @@
 const getPGBase = require('./conexao');
 
-async function query(text) {
-    // console.log(text)
-
+async function query(text, array = null) {
     const cliente = getPGBase()
     await cliente.connect();
-    const result = await cliente.query(text)
+    const result = await cliente.query(text, array)
 
     await cliente.end()
     return result.rows

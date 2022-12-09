@@ -1,5 +1,5 @@
 class OrdemServico {
-    _id = 0
+    _id = null
     _dataEntrada = ''
     _descricao = ''
     _cliente = null

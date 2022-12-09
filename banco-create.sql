@@ -39,7 +39,7 @@ select * from veiculo
 select * from cliente
 select * from ordem_servico
 
-drop table ordem_servico
-drop table cliente
-drop table veiculo
+drop table ordem_servico;
+drop table cliente;
+drop table veiculo;
 

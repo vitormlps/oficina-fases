@@ -1,77 +1,70 @@
-const Random = require('./input_mock');
 const CrudOs = require('../persistencia/crud_os');
 const CrudCliente = require('../persistencia/crud_cliente');
 const CrudVeiculo = require('../persistencia/crud_veiculo');
-const verificacao = require('./verificacao');
+const servico_verificacao = require('./verificacao');
+const OrdemServico = require('../entidades/ordem_servico');
+const Cliente = require('../entidades/cliente');
+const Veiculo = require('../entidades/veiculo');
 
-async function registrarOS(novaOS, novoCliente) {
-    console.log("\n... Finalizando registro da OS ...")
+async function registrarOS(body) {
 
-    if (typeof novaOS != 'object' && typeof novoCliente != 'object') {
-        throw { id: 403, mensagem: "Erro ao registrar OS." }
+    if (body == null) {
+        throw { id: 400, mensagem: `Erro ao registrar a OS: ${body}` }
     }
 
-    novaOS.dataEntrada = Random.os_DataEntrada()
-    novaOS.descricao = Random.os_Descricao()
-    novaOS.quantidadeDanos = Random.os_QtdeDanos()
-    novaOS.trocarPecas = Random.os_TrocarPecas()
-    novaOS.fotos = Random.os_Fotos()
-    novaOS.cliente = novoCliente
+    let novaOS = new OrdemServico()
+    novaOS.dataEntrada = body.dataEntrada
+    novaOS.descricao = body.descricao
+    novaOS.quantidadeDanos = body.quantidadeDanos
+    novaOS.trocarPecas = body.trocarPecas
+    novaOS.fotos = body.fotos
+    novaOS.cliente = await CrudCliente.buscarUltimoRegistro()
 
-    if (await verificacao.verificarOS(novaOS)) {
-        novaOS = await CrudOs.registrar(novaOS)
-        console.log(">> Registro da OS completa!")
-        return novaOS
-
+    if (await servico_verificacao.verificarRegistro(novaOS)) {
+        return await CrudOs.registrar(novaOS)
     } else {
-        throw { id: 406, mensagem: "OS já registrada." }
+        throw { id: 409, mensagem: "OS já registrada." }
     }
 }
 
-async function registrarCliente(novoCliente, novoVeiculo) {
-    console.log("\n... Registrando informações do cliente ...")
+async function registrarCliente(body) {
 
-    if (typeof novoCliente != 'object' && typeof novoVeiculo != 'object') {
-        throw { id: 402, mensagem: "Erro ao registrar o cliente." }
+    if (body == null) {
+        throw { id: 400, mensagem: `Erro ao registrar o cliente: ${body}` }
     }
 
-    novoCliente.nome = Random.c_Nome()
-    novoCliente.contato = Random.c_Contato()
-    novoCliente.endereco = Random.c_Endereco()
-    novoCliente.cpf = Random.c_Cpf()
-    novoCliente.veiculo = novoVeiculo
+    let novoCliente = new Cliente()
+    novoCliente.nome = body.nome
+    novoCliente.contato = body.contato
+    novoCliente.endereco = body.endereco
+    novoCliente.cpf = body.cpf
+    novoCliente.veiculo = await CrudVeiculo.buscarUltimoRegistro()
 
-    if (await verificacao.verificarCliente(novoCliente)) {
-        novoCliente = await CrudCliente.registrar(novoCliente)
-        console.log(">> Registro do cliente completo!")
-        return novoCliente
-
+    if (await servico_verificacao.verificarRegistro(novoCliente)) {
+        return await CrudCliente.registrar(novoCliente)
     } else {
-        throw { id: 405, mensagem: "Cliente já registrado." }
+        throw { id: 409, mensagem: "Cliente já registrado." }
     }
 }
 
-async function registrarVeiculo(novoVeiculo) {
-    console.log("\n... Registrando informações do veículo ...")
+async function registrarVeiculo(body) {
 
-    if (typeof novoVeiculo != 'object') {
-        throw { id: 401, mensagem: "Erro ao registrar o veículo." }
+    if (body == null) {
+        throw { id: 400, mensagem: `Erro ao registrar o veículo: ${body}` }
     }
 
-    novoVeiculo.setTipo(Random.v_Tipo())
-    novoVeiculo.marca = Random.v_Marca()
-    novoVeiculo.modelo = Random.v_Modelo()
-    novoVeiculo.placa = Random.v_Placa()
-    novoVeiculo.quilometragem = Random.v_Quilometragem()
-    novoVeiculo.cor = Random.v_Cor()
+    let novoVeiculo = new Veiculo()
+    novoVeiculo.tipo = body.tipo
+    novoVeiculo.marca = body.marca
+    novoVeiculo.modelo = body.modelo
+    novoVeiculo.placa = body.placa
+    novoVeiculo.quilometragem = body.quilometragem
+    novoVeiculo.cor = body.cor
 
-    if (await verificacao.verificarVeiculo(novoVeiculo)) {
-        novoVeiculo = await CrudVeiculo.registrar(novoVeiculo)
-        console.log(">> Registro do veículo completo!")
-        return novoVeiculo
-
+    if (await servico_verificacao.verificarRegistro(novoVeiculo)) {
+        return await CrudVeiculo.registrar(novoVeiculo)
     } else {
-        throw { id: 404, mensagem: "Veículo já registrado." }
+        throw { id: 409, mensagem: "Veículo já registrado." }
     }
 }
 
