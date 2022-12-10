@@ -32,17 +32,4 @@ async function remover(id, tipoEntidade) {
     }
 }
 
-async function removerConjunto(id) {
-
-    if (id == null) {
-        throw { id: 400, mensagem: "Erro ao remover entidade(s)." }
-    }
-
-    if (await servico_verificacao.buscar(id)) {
-        throw { id: 404, mensagem: "Entidade não encontrada." }
-    } else {
-        return await CrudVeiculo.removerCascade(id)
-    }
-}
-
-module.exports = { remover, removerConjunto }
+module.exports = { remover }

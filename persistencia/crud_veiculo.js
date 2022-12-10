@@ -52,19 +52,8 @@ async function remover(id) {
     return resRows[0]
 }
 
-async function removerCascade(id) {
-    // await qAPI.query(`DELETE FROM ordem_servico WHERE id_os = $1`, [id])
-    // await qAPI.query(`DELETE FROM cliente WHERE id_cliente = $1`, [id])
-    // await qAPI.query(`DELETE FROM veiculo WHERE id_veiculo = $1`, [id])
-    resRows = await qAPI.query(`DELETE FROM ordem_servico WHERE id_os = $1 returning *;
-                        DELETE FROM cliente WHERE id_cliente = $1;
-                        DELETE FROM veiculo WHERE id_veiculo = $1;`, [id])
-    return resRows[0]
-
-}
-
 module.exports = {
     registrar, listar, listar_por_campo, atualizar,
     buscar, buscar_campo, buscarUltimoRegistro,
-    remover, removerCascade
+    remover
 }

@@ -123,6 +123,22 @@ async function main() {
         }
     })
 
+    // Listagem total das entidades //
+    app.get('/entidades', async (req, res) => {
+        try {
+            res.status(200).json(await servico_impressao
+                .imprimirTodasAsEntidades());
+
+        } catch (err) {
+            if (err && err.id) {
+                res.status(err.id).json({ Erro: err.mensagem })
+            }
+            else {
+                res.status(500).json({ Erro: "Erro na aplicação." });
+            }
+        }
+    })
+
     // Falha na listagem de entidades //
     app.get('/falha', async (req, res) => {
         try {
@@ -279,6 +295,8 @@ async function main() {
     // Remoção das entidades //
     ///////////////////////////
     // Veículo //
+    // Ao remover veículo, as entidades relacionadas 
+    // são removidas em conjunto (cascade).
     app.delete('/veiculos/:id', async (req, res) => {
         try {
             res.status(200).json(await servico_remocao
@@ -315,22 +333,6 @@ async function main() {
         try {
             res.status(200).json(await servico_remocao
                 .remover(req.params.id, 'os'));
-
-        } catch (err) {
-            if (err && err.id) {
-                res.status(err.id).json({ Erro: err.mensagem })
-            }
-            else {
-                res.status(500).json({ Erro: "Erro na aplicação." });
-            }
-        }
-    })
-
-    // Remoção de um conjunto de entidades //
-    app.delete('/entidades/:id', async (req, res) => {
-        try {
-            res.status(200).json(await servico_remocao
-                .removerConjunto(req.params.id));
 
         } catch (err) {
             if (err && err.id) {

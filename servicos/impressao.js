@@ -35,4 +35,15 @@ async function imprimirEntidade(tipo, id) {
     }
 }
 
-module.exports = { imprimirEntidade, imprimirTodos }
+async function imprimirTodasAsEntidades() {
+
+    const listaCompleta = await CrudOs.listarTudo()
+
+    if (listaCompleta) {
+        return listaCompleta
+    } else {
+        throw { id: 204, mensagem: "Banco de dados sem conteúdo." }
+    }
+}
+
+module.exports = { imprimirEntidade, imprimirTodos, imprimirTodasAsEntidades }

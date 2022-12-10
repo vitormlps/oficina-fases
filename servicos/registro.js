@@ -8,8 +8,8 @@ const Veiculo = require('../entidades/veiculo');
 
 async function registrarOS(body) {
 
-    if (body == null) {
-        throw { id: 400, mensagem: `Erro ao registrar a OS: ${body}` }
+    if (Object.keys(body).length < 5) {
+        throw { id: 406, mensagem: "Faltam informações no formulário." }
     }
 
     let novaOS = new OrdemServico()
@@ -20,17 +20,21 @@ async function registrarOS(body) {
     novaOS.fotos = body.fotos
     novaOS.cliente = await CrudCliente.buscarUltimoRegistro()
 
-    if (await servico_verificacao.verificarRegistro(novaOS)) {
-        return await CrudOs.registrar(novaOS)
+    if (novaOS.cliente) {
+        if (await servico_verificacao.verificarRegistro(novaOS)) {
+            return await CrudOs.registrar(novaOS)
+        } else {
+            throw { id: 409, mensagem: "OS já registrada." }
+        }
     } else {
-        throw { id: 409, mensagem: "OS já registrada." }
+        throw { id: 404, mensagem: "Cliente não registrado." }
     }
 }
 
 async function registrarCliente(body) {
 
-    if (body == null) {
-        throw { id: 400, mensagem: `Erro ao registrar o cliente: ${body}` }
+    if (Object.keys(body).length < 4) {
+        throw { id: 406, mensagem: "Faltam informações no formulário." }
     }
 
     let novoCliente = new Cliente()
@@ -40,17 +44,21 @@ async function registrarCliente(body) {
     novoCliente.cpf = body.cpf
     novoCliente.veiculo = await CrudVeiculo.buscarUltimoRegistro()
 
-    if (await servico_verificacao.verificarRegistro(novoCliente)) {
-        return await CrudCliente.registrar(novoCliente)
+    if (novoCliente.veiculo) {
+        if (await servico_verificacao.verificarRegistro(novoCliente)) {
+            return await CrudCliente.registrar(novoCliente)
+        } else {
+            throw { id: 409, mensagem: "Cliente já registrado." }
+        }
     } else {
-        throw { id: 409, mensagem: "Cliente já registrado." }
+        throw { id: 404, mensagem: "Veículo não registrado." }
     }
 }
 
 async function registrarVeiculo(body) {
 
-    if (body == null) {
-        throw { id: 400, mensagem: `Erro ao registrar o veículo: ${body}` }
+    if (Object.keys(body).length < 6) {
+        throw { id: 406, mensagem: "Faltam informações no formulário." }
     }
 
     let novoVeiculo = new Veiculo()
