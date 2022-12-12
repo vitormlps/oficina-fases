@@ -15,7 +15,7 @@ create table cliente (
 	endereco char(250) not null,
 	cpf char(14) not null,
 	id_veiculo integer not null,
-	constraint fk_CliVei foreign key (id_veiculo) references veiculo(id_veiculo)
+	constraint fk_CliVei foreign key (id_veiculo) references veiculo(id_veiculo) on delete cascade
 );
 
 create table ordem_servico (
@@ -31,7 +31,7 @@ create table ordem_servico (
 	montagem boolean not null default FALSE,
 	acabamento boolean not null default FALSE,
 	id_cliente integer not null,
-	constraint fk_OsCli foreign key (id_cliente) references cliente(id_cliente)
+	constraint fk_OsCli foreign key (id_cliente) references cliente(id_cliente) on delete cascade
 );
 
 
@@ -43,3 +43,4 @@ drop table ordem_servico;
 drop table cliente;
 drop table veiculo;
 
+(DELETE FROM ordem_servico WHERE id_os = 1 returning id_os)

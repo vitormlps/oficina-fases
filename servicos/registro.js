@@ -8,7 +8,7 @@ const Veiculo = require('../entidades/veiculo');
 
 async function registrarOS(body) {
 
-    if (Object.keys(body).length < 5) {
+    if (Object.keys(body).length < 5 || !body.hasOwnProperty("dataEntrada")) {
         throw { id: 406, mensagem: "Faltam informações no formulário." }
     }
 
@@ -33,7 +33,9 @@ async function registrarOS(body) {
 
 async function registrarCliente(body) {
 
-    if (Object.keys(body).length < 4) {
+    console.log(body)
+
+    if (Object.keys(body).length < 4 || !body.hasOwnProperty("contato")) {
         throw { id: 406, mensagem: "Faltam informações no formulário." }
     }
 
@@ -57,7 +59,7 @@ async function registrarCliente(body) {
 
 async function registrarVeiculo(body) {
 
-    if (Object.keys(body).length < 6) {
+    if (Object.keys(body).length < 6 || !body.hasOwnProperty("tipo")) {
         throw { id: 406, mensagem: "Faltam informações no formulário." }
     }
 

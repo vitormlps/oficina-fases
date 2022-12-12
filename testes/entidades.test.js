@@ -1,36 +1,47 @@
-const Random = require('../servicos/input_mock');
+const CrudVeiculo = require('../persistencia/crud_veiculo');
+const CrudCliente = require('../persistencia/crud_cliente');
 const OrdemServico = require('../entidades/ordem_servico');
 const Cliente = require('../entidades/cliente');
 const Veiculo = require('../entidades/veiculo');
 
-// Validação das entidades
-// Veículo
+// setup
 let novoVeiculo = new Veiculo()
-novoVeiculo.setTipo(Random.v_Tipo())
-novoVeiculo.marca = Random.v_Marca()
-novoVeiculo.modelo = Random.v_Modelo()
-novoVeiculo.placa = Random.v_Placa()
-novoVeiculo.quilometragem = Random.v_Quilometragem()
-novoVeiculo.cor = Random.v_Cor()
+novoVeiculo.tipo = "Carro"
+novoVeiculo.marca = "Daewoo"
+novoVeiculo.modelo = "Nubira SW CDX 2.0 16V Mec."
+novoVeiculo.placa = "KFF5901"
+novoVeiculo.quilometragem = 120000
+novoVeiculo.cor = "Verde"
+
+let novoCliente = new Cliente()
+novoCliente.nome = "Gael Zampirolli"
+novoCliente.contato = "(99) 2748-0113"
+novoCliente.endereco = "Travessa da CDL | Bairro Centro | Ji-Paraná/RO | 76900032"
+novoCliente.cpf = "117.066.880-16"
+
+let novaOS = new OrdemServico()
+novaOS.dataEntrada = "2023-05-26"
+novaOS.descricao = "Acidente fatal"
+novaOS.quantidadeDanos = 5
+novaOS.trocarPecas = true
+novaOS.fotos = "/oficina-fases/fotos/sinistro_03.jpg"
+
+// Validação das entidades
 describe('O veículo', () => {
     test('está criado', () => {
         expect(new Veiculo()).toBeInstanceOf(Veiculo);
         expect(novoVeiculo).toBeInstanceOf(Veiculo);
     });
-    describe('com tipos', () => {
-        test('Carro, Moto e Caminhão determinados', () => {
-            expect(novoVeiculo.tipos).toHaveProperty('Carro');
-            expect(novoVeiculo.tipos).toHaveProperty('Moto');
-            expect(novoVeiculo.tipos).toHaveProperty('Caminhão');
+    describe('com tipo', () => {
+        test('contendo apenas letras', () => {
+            expect(novoVeiculo.tipo).toEqual(
+                expect.stringMatching(/^\D+$/)
+            );
         });
-        test('e com apenas um desses tipos como verdadeiro', () => {
-            let count = 0
-            for (let tipo in novoVeiculo.tipos) {
-                if (novoVeiculo.tipos[tipo]) {
-                    count++
-                }
-            }
-            expect(count).toBe(1);
+        test('e nenhum caracter especial', () => {
+            expect(novoVeiculo.tipo).toEqual(
+                expect.not.stringMatching(/^\W+$/)
+            );
         });
     });
     describe('com marca', () => {
@@ -85,12 +96,6 @@ describe('O veículo', () => {
 });
 
 // Cliente
-let novoCliente = new Cliente()
-novoCliente.nome = Random.c_Nome()
-novoCliente.contato = Random.c_Contato()
-novoCliente.endereco = Random.c_Endereco()
-novoCliente.cpf = Random.c_Cpf()
-novoCliente.veiculo = novoVeiculo
 describe('O cliente', () => {
     test('está criado', () => {
         expect(new Cliente()).toBeInstanceOf(Cliente);
@@ -141,20 +146,14 @@ describe('O cliente', () => {
         });
     });
     describe('com veículo', () => {
-        test('registrado', () => {
-            expect(novoCliente.veiculo).toBe(novoVeiculo);
+        test('registrado', async () => {
+            novoCliente.veiculo = await CrudVeiculo.buscarUltimoRegistro()
+            expect(novoCliente.veiculo).toBeDefined();
         });
     });
 });
 
 // Ordem de Serviço
-let novaOS = new OrdemServico()
-novaOS.dataEntrada = Random.os_DataEntrada()
-novaOS.descricao = Random.os_Descricao()
-novaOS.quantidadeDanos = Random.os_QtdeDanos()
-novaOS.trocarPecas = Random.os_TrocarPecas()
-novaOS.fotos = Random.os_Fotos()
-novaOS.cliente = novoCliente
 describe('A ordem de serviço', () => {
     test('está criada', () => {
         expect(new OrdemServico()).toBeInstanceOf(OrdemServico);
@@ -188,8 +187,9 @@ describe('A ordem de serviço', () => {
         });
     });
     describe('com cliente', () => {
-        test('registrado', () => {
-            expect(novaOS.cliente).toBe(novoCliente);
+        test('registrado', async () => {
+            novaOS.cliente = await CrudCliente.buscarUltimoRegistro()
+            expect(novaOS.cliente).toBeDefined();
         });
     });
 });

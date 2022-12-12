@@ -1,33 +1,21 @@
-const Random = require('../servicos/input_mock');
-const Cliente = require('../entidades/cliente');
-const Veiculo = require('../entidades/veiculo');
+const CrudVeiculo = require('../persistencia/crud_veiculo');
 const CrudCliente = require('../persistencia/crud_cliente');
+const Cliente = require('../entidades/cliente');
+
+// setup
+let novoCliente = new Cliente()
+novoCliente.nome = "Gael Zampirolli"
+novoCliente.contato = "(99) 2748-0113"
+novoCliente.endereco = "Travessa da CDL | Bairro Centro | Ji-Paraná/RO | 76900032"
+novoCliente.cpf = "117.066.880-16"
 
 // Validação das funções de CRUD de cliente
-// Setup
-let novoVeiculo = new Veiculo()
-novoVeiculo.setTipo(Random.v_Tipo())
-novoVeiculo.marca = Random.v_Marca()
-novoVeiculo.modelo = Random.v_Modelo()
-novoVeiculo.placa = Random.v_Placa()
-novoVeiculo.quilometragem = Random.v_Quilometragem()
-novoVeiculo.cor = Random.v_Cor()
-let novoCliente = new Cliente()
-novoCliente.nome = Random.c_Nome()
-novoCliente.contato = Random.c_Contato()
-novoCliente.endereco = Random.c_Endereco()
-novoCliente.cpf = Random.c_Cpf()
-novoCliente.veiculo = novoVeiculo
-// Testes
 describe('O CRUD do cliente', () => {
     describe('na função Registrar', () => {
-        test('não devolve erro recebendo um objeto cliente', () => {
-            expect(() => CrudCliente.registrar(novoCliente)
+        test('não devolve erro recebendo um objeto cliente', async () => {
+            novoCliente.veiculo = await CrudVeiculo.buscarUltimoRegistro()
+            expect(async () => await CrudCliente.registrar(novoCliente)
             ).not.toThrow();
-        });
-        test('e devolve o mesmo objeto cliente', async () => {
-            const data = await CrudCliente.registrar(novoCliente);
-            expect(data).toBeInstanceOf(Cliente);
         });
         test('mas ocorre erro ao passar outro tipo', async () => {
             try {
@@ -48,7 +36,7 @@ describe('O CRUD do cliente', () => {
             const data = await CrudCliente.listar_por_campo('cpf');
             expect(data).toBeInstanceOf(Array);
         });
-        test('mas devolve erro se o parametro for != de string', async () => {
+        test('mas devolve erro se o parametro for diferente de string', async () => {
             try {
                 await CrudCliente.listar_por_campo(0)
             } catch (err) {
@@ -58,10 +46,11 @@ describe('O CRUD do cliente', () => {
     });
     describe('na função buscar', () => {
         test('devolve um resultado objeto da query', async () => {
-            const data = await CrudCliente.buscar(1);
+            let cliente = await CrudCliente.buscarUltimoRegistro()
+            const data = await CrudCliente.buscar(cliente.id_cliente);
             expect(data).toBeInstanceOf(Object);
         });
-        test('mas devolve erro se o parametro for != de numero', async () => {
+        test('mas devolve erro se o parametro for diferente de número', async () => {
             try {
                 await CrudCliente.buscar('0')
             } catch (err) {
@@ -69,9 +58,16 @@ describe('O CRUD do cliente', () => {
             }
         });
     });
+    describe('na função buscar último registro', () => {
+        test('devolve um resultado objeto da query', async () => {
+            const data = await CrudCliente.buscarUltimoRegistro();
+            expect(data).toBeInstanceOf(Object);
+        });
+    });
     describe('na função buscar campo', () => {
         test('devolve um resultado string da query', async () => {
-            const data = await CrudCliente.buscar_campo(1, 'cpf');
+            let cliente = await CrudCliente.buscarUltimoRegistro()
+            const data = await CrudCliente.buscar_campo(cliente.id_cliente, 'cpf');
             expect(typeof data).toBe('string');
         });
         test('mas devolve erro se parametros estiverem errados', async () => {
@@ -83,9 +79,10 @@ describe('O CRUD do cliente', () => {
         });
     });
     describe('na função atualizar', () => {
-        test('devolve um resultado string da query', async () => {
-            const data = await CrudCliente.atualizar(novoCliente, 'cpf', "'537.199.055-00'");
-            expect(typeof data).toBe('string');
+        test('devolve um resultado objeto da query', async () => {
+            let cliente = await CrudCliente.buscarUltimoRegistro()
+            const data = await CrudCliente.atualizar(cliente.id_cliente, 'cpf', '537.199.055-00');
+            expect(data).toBeInstanceOf(Object);
         });
         test('mas devolve erro se parametros estiverem errados', async () => {
             try {
@@ -97,8 +94,9 @@ describe('O CRUD do cliente', () => {
     });
     describe('na função remover', () => {
         test('devolve um resultado number da query', async () => {
-            const data = await CrudCliente.remover(1);
-            expect(typeof data).toBe('number');
+            let cliente = await CrudCliente.buscarUltimoRegistro()
+            const data = await CrudCliente.remover(cliente.id_cliente);
+            expect(data).toBeInstanceOf(Object);
         });
         test('mas devolve erro se parametros estiverem errados', async () => {
             try {

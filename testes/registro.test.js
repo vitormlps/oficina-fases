@@ -1,17 +1,21 @@
 const Registro = require('../servicos/registro');
-const OrdemServico = require('../entidades/ordem_servico');
-const Cliente = require('../entidades/cliente');
-const Veiculo = require('../entidades/veiculo');
 
 // Validação das funções de registro
 // Veículo
-let novoVeiculo = new Veiculo()
 let registrarVeiculo = Registro.registrarVeiculo
 describe('O registro do veículo', () => {
+    let body = {
+        "tipo": "Carro",
+        "marca": "Daewoo",
+        "modelo": "Nubira SW CDX 2.0 16V Mec.",
+        "placa": "KFF5901",
+        "quilometragem": 120000,
+        "cor": "Verde"
+    }
     describe('não devolve um erro', () => {
         test('com o objeto veiculo', async () => {
-            const data = await registrarVeiculo(novoVeiculo);
-            expect(data).toBeInstanceOf(Veiculo);
+            const data = await registrarVeiculo(body);
+            expect(data).toBeInstanceOf(Object);
         });
     });
     describe('mas sim com outros tipos', () => {
@@ -19,34 +23,39 @@ describe('O registro do veículo', () => {
             try {
                 await registrarVeiculo('new Veiculo()')
             } catch (err) {
-                expect(err).toEqual({ id: 401, mensagem: "Erro ao registrar o veículo." });
+                expect(err).toEqual({ id: 406, mensagem: "Faltam informações no formulário." });
             }
         });
         test('ou numbers', async () => {
             try {
                 await registrarVeiculo(0)
             } catch (err) {
-                expect(err).toEqual({ id: 401, mensagem: "Erro ao registrar o veículo." });
+                expect(err).toEqual({ id: 406, mensagem: "Faltam informações no formulário." });
             }
         });
         test('ou funções', async () => {
             try {
                 await registrarVeiculo(registrarCliente)
             } catch (err) {
-                expect(err).toEqual({ id: 401, mensagem: "Erro ao registrar o veículo." });
+                expect(err).toEqual({ id: 406, mensagem: "Faltam informações no formulário." });
             }
         });
     });
 });
 
 // Cliente
-let novoCliente = new Cliente()
 let registrarCliente = Registro.registrarCliente
 describe('O registro do cliente', () => {
+    let body = {
+        "nome": "Gael Zampirolli",
+        "contato": "(99) 2748-0113",
+        "endereco": "Travessa da CDL | Bairro Centro | Ji-Paraná/RO | 76900032",
+        "cpf": "117.066.880-16"
+    }
     describe('não devolve um erro', () => {
         test('com o objeto cliente', async () => {
-            const data = await registrarCliente(novoCliente, novoVeiculo);
-            expect(data).toBeInstanceOf(Cliente);
+            const data = await registrarCliente(body);
+            expect(data).toBeInstanceOf(Object);
         });
     });
     describe('mas sim com outros tipos', () => {
@@ -54,34 +63,40 @@ describe('O registro do cliente', () => {
             try {
                 await registrarCliente('new Cliente()')
             } catch (err) {
-                expect(err).toEqual({ id: 402, mensagem: "Erro ao registrar o cliente." });
+                expect(err).toEqual({ id: 406, mensagem: "Faltam informações no formulário." });
             }
         });
         test('ou numbers', async () => {
             try {
                 await registrarCliente(0)
             } catch (err) {
-                expect(err).toEqual({ id: 402, mensagem: "Erro ao registrar o cliente." });
+                expect(err).toEqual({ id: 406, mensagem: "Faltam informações no formulário." });
             }
         });
         test('ou funções', async () => {
             try {
                 await registrarCliente(registrarVeiculo)
             } catch (err) {
-                expect(err).toEqual({ id: 402, mensagem: "Erro ao registrar o cliente." });
+                expect(err).toEqual({ id: 406, mensagem: "Faltam informações no formulário." });
             }
         });
     });
 });
 
 // Ordem de Serviço
-let novaOS = new OrdemServico()
 let registrarOS = Registro.registrarOS
 describe('O registro da OS', () => {
+    let body = {
+        "dataEntrada": "2023-05-26",
+        "descricao": "Acidente fatal",
+        "quantidadeDanos": 5,
+        "trocarPecas": true,
+        "fotos": "/oficina-fases/fotos/sinistro_03.jpg"
+    }
     describe('não devolve um erro', () => {
         test('com o objeto OS', async () => {
-            const data = await registrarOS(novaOS, novoCliente);
-            expect(data).toBeInstanceOf(OrdemServico);
+            const data = await registrarOS(body);
+            expect(data).toBeInstanceOf(Object);
         });
     });
     describe('mas sim com outros tipos', () => {
@@ -89,21 +104,21 @@ describe('O registro da OS', () => {
             try {
                 await registrarOS('new OrdemServico()')
             } catch (err) {
-                expect(err).toEqual({ id: 403, mensagem: "Erro ao registrar OS." });
+                expect(err).toEqual({ id: 406, mensagem: "Faltam informações no formulário." });
             }
         });
         test('ou numbers', async () => {
             try {
                 await registrarOS(0)
             } catch (err) {
-                expect(err).toEqual({ id: 403, mensagem: "Erro ao registrar OS." });
+                expect(err).toEqual({ id: 406, mensagem: "Faltam informações no formulário." });
             }
         });
         test('ou funções', async () => {
             try {
                 await registrarOS(registrarVeiculo)
             } catch (err) {
-                expect(err).toEqual({ id: 403, mensagem: "Erro ao registrar OS." });
+                expect(err).toEqual({ id: 406, mensagem: "Faltam informações no formulário." });
             }
         });
     });

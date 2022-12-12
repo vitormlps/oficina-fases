@@ -19,10 +19,13 @@ async function realizarEtapa(id, etapa) {
     let result = null
     let veiculo = null
 
-    if (etapa = 'acabamento') {
+    if (etapa == 'acabamento') {
         os = await CrudOs.buscar(id)
+        console.log(os)
         cliente = await CrudCliente.buscar(os.id_cliente)
+        console.log(cliente)
         veiculo = await CrudVeiculo.atualizar(cliente.id_veiculo, 'cor', Random.v_Cor())
+        console.log(veiculo)
     }
     result = await CrudOs.atualizar(id, etapa, true)
 
